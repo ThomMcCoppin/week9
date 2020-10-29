@@ -18,11 +18,13 @@
 		
 		<div id="lineChart" style="height: 370px; width: 100%;">
 		</div>
-		<div id="pieChart" style="height: 370px; width: 100%; display: none;">
+		<div id="pieChart" style="height: 370px; width: 100%; display: none; padding-left: 10%;">
 		</div>
-		<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 		<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+		<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 		<script>
+			window.onload = function() {
+			//using buttons to switch graphs
 			document.getElementById("pieButton").addEventListener("click", function() {
 				$("#pieChart").show();
 				$("#lineChart").hide();
@@ -31,48 +33,44 @@
 				$("#lineChart").show();
 				$("#pieChart").hide();
 			});
+		}
+			//creating the chart functions
 			function createPieChart(apiData) {
-				window.onload = function () {
 
 				var chart = new CanvasJS.Chart("pieChart", {
 					animationEnabled: true,
 					theme: "light2",
 					title:{
-						text: "Brock's DOTA hours"
+						text: "Brock's Anxiety Causes"
 					},
 					data: [{
 						type: "pie",
 						startAngle: 240,
 						yValueFormatString: "##0.00\"%\"",
 						indexLabel: "{label} {y}",
-						dataPoints: $(apiData)
+						dataPoints: apiData
 					}]
 				});
 				chart.render();
-
 				}
-			}
-
+			
 			function createLineGraph(apiData) {
-				window.onload = function() {
 
 				var chart = new CanvasJS.Chart("lineChart", {
 					animationEnabled: true,
 					theme: "light2",
 					title: {
-						text: "Brock's Anxiety Causes"
+						text: "Brock's DOTA hours"
 					},
 					data: [{
 						type: "line",
-						dataPoints: $(apiData)
+						dataPoints: apiData
 					}]
 				});
 				chart.render();
-				console.log("check");
-				}
-
 			}
-				fetch("https://mufall2020-bit240.github.io/professor_api/professor/video_game_hours.json").then(function(networkRequest) {
+			//fetching APIdata and calling graph functions
+			fetch("https://mufall2020-bit240.github.io/professor_api/professor/video_game_hours.json").then(function(networkRequest) {
 				console.log(networkRequest);
 				return networkRequest.json();
 			}).then(function(jsonData) {
@@ -80,10 +78,10 @@
 				
 				var hoursData = jsonData;
 				console.log("hours Data: ",hoursData.data);
-				createLineGraph(hoursData);
+				createLineGraph(hoursData.data);
 			});
 				
-				fetch("https://mufall2020-bit240.github.io/professor_api/professor/anxiety.json ").then(function(networkRequest) {
+			fetch("https://mufall2020-bit240.github.io/professor_api/professor/anxiety.json ").then(function(networkRequest) {
 				console.log(networkRequest);
 				return networkRequest.json();
 			}).then(function(jsonData) {
@@ -91,7 +89,7 @@
 				
 				var anxietyData = jsonData;
 				console.log("Anxiety Data: ",anxietyData);
-				createPieChart(anxietyData);
+				createPieChart(anxietyData.data);
 			});
 		</script>
 	</body>
